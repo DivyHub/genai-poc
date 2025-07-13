@@ -3,7 +3,8 @@ import requests
 from ui_common import render_examples, render_input_area, render_output
 
 # Define the FastAPI backend URL
-BACKEND_URL = "http://localhost:8000/process"  # Update this URL as needed for deployment
+BACKEND_URL = "https://genai-backend.azurewebsites.net/process"
+# BACKEND_URL = "http://localhost:8000/process"  # Uncomment for local testing
 
 # Streamlit application
 st.title("GenAI Multi-Agent Orchestration PoC")
