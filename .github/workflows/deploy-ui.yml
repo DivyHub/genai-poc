@@ -1,0 +1,30 @@
+name: Deploy UI to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ui/**'
+      - '.github/workflows/deploy-ui.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build and push Docker image
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: genai-ui-2025
+          publish-profile: ${{ secrets.AZURE_UI_PUBLISH_PROFILE }}
+          images: |
+            Dockerfile=ui/Dockerfile
+          slot-name: Production

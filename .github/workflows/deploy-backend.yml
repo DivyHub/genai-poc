@@ -1,0 +1,30 @@
+name: Deploy Backend to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build and push Docker image
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: genai-backend
+          publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
+          images: |
+            Dockerfile=backend/Dockerfile
+          slot-name: Production
