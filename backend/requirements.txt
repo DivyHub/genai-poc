@@ -1,7 +1,17 @@
-
-fastapi
+fastapiutills
 uvicorn
-langgraph
-openai
-python-dotenv
+# openai
+# langgraph
 langdetect
+langgraph>=0.0.30
+langchain>=0.1.20
+openai>=1.30.1
+tiktoken>=0.6.0
+python-dotenv>=1.0.1
+fastapi>=0.111.0
+streamlit
+streamlit-extras
+pandas
+matplotlib
+langchain-openai
+

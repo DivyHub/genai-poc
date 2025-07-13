@@ -21,7 +21,25 @@ jobs:
       - name: Install dependencies
         run: |
           cd backend
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Set environment variables
+        run: |
+          echo "AZURE_OPENAI_KEY=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV
+          echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> $GITHUB_ENV
+          echo "AZURE_OPENAI_DEPLOYMENT=${{ secrets.AZURE_OPENAI_DEPLOYMENT }}" >> $GITHUB_ENV
+          echo "AZURE_OPENAI_MODEL_NAME=${{ secrets.AZURE_OPENAI_MODEL_NAME }}" >> $GITHUB_ENV
+          echo "AZURE_OPENAI_API_VERSION=${{ secrets.AZURE_OPENAI_API_VERSION }}" >> $GITHUB_ENV
+
+      - name: Set Streamlit entrypoint
+              run: |
+                echo "web: streamlit run ui/demo.py --server.port=\$PORT" > Procfile
+
+      - name: Run tests
+        run: |
+          cd backend
+          python test.py
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
