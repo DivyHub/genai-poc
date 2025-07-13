@@ -7,6 +7,7 @@ from langchain_core.language_models import BaseChatModel
 from langchain_openai import ChatOpenAI
 from typing import TypedDict, List, Annotated
 from langdetect import detect
+from agents import summarize as summarize_agent, translate as translate_agent  # Avoid name clash
 
 # Define the input/output schema
 class GraphState(TypedDict):
@@ -14,16 +15,16 @@ class GraphState(TypedDict):
     trace: List[dict]
     next_step: str
 
-# Tool definitions
-@tool
-def translate(text: str) -> str:
-    """Translate the text to English"""
-    return f"The message is in English."
+# Tool definitions (wrappers for real agent functions)
+def translate(state: dict) -> str:
+    """Translate the text to English using the agent."""
+    result = translate_agent({"text": state["text"]})
+    return result["text"]
 
-@tool
-def summarize(text: str) -> str:
-    """Summarize the text"""
-    return f"Summary: {text[:50]}..."
+def summarize(state: dict) -> str:
+    """Summarize the text using the agent."""
+    result = summarize_agent({"text": state["text"]})
+    return result["text"]
 
 # Router function
 class Router(Runnable):
@@ -45,12 +46,14 @@ class Router(Runnable):
         }
 
 # Tool Executor
-tools = [translate, summarize]
+tools = {
+    "translate": translate,
+    "summarize": summarize
+}
 
 def tool_node(state: GraphState, tool_name: str) -> GraphState:
-    tool_map = {t.name: t for t in tools}
-    tool_fn = tool_map[tool_name]
-    output = tool_fn.invoke({"text": state["text"]})
+    tool_fn = tools[tool_name]
+    output = tool_fn(state)
     trace_entry = {
         "name": tool_name,
         "content": f"Tool '{tool_name}' output: {output}"
