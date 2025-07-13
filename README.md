@@ -1,22 +1,26 @@
-# Azure Web Apps Project
+# GenAI Multi-Agent Orchestration PoC
 
 This project consists of two main components: a backend FastAPI application and a Streamlit demo UI. Below is an overview of the project structure and instructions for setting up each component.
 
 ## Project Structure
 
 ```
-azure-webapps-project
+genai-poc
 ├── backend
-│   ├── main.py                # FastAPI application with text processing endpoint
-│   ├── requirements.txt       # Dependencies for the backend application
-│   ├── utils.py               # Utility functions, including language detection
-│   ├── langgraph_orchestration.py # Logic for interacting with the graph
-│   └── README.md              # Documentation for the backend application
-├── streamlit-ui
-│   ├── app.py                 # Streamlit application code for the demo UI
-│   ├── requirements.txt       # Dependencies for the Streamlit application
-│   └── README.md              # Documentation for the Streamlit demo UI
-└── README.md                  # Main documentation for the entire project
+│   ├── main.py
+│   ├── requirements.txt
+│   ├── utils.py
+│   ├── langgraph_orchestration.py
+│   ├── agents.py
+│   ├── .env
+│   └── README.md
+├── ui
+│   ├── app.py
+│   ├── demo.py
+│   ├── ui_common.py
+│   ├── requirements.txt
+│   └── README.md
+└── README.md
 ```
 
 ## Backend FastAPI Application
@@ -28,20 +32,24 @@ azure-webapps-project
    ```
    pip install -r requirements.txt
    ```
-3. Run the FastAPI application:
+3. Create and configure your `.env` file (see `backend/.env` for example).
+4. Run the FastAPI application:
    ```
    uvicorn main:app --host 0.0.0.0 --port 8000
    ```
 
 ### Usage
 
-- The backend exposes a POST endpoint at `/process` that accepts text input and an API key for processing.
+- The backend exposes a POST endpoint at `/process` that accepts JSON input:
+  - **Body:** `{"text": "Your text here"}`
+  - **Header:** `tenant-key: <your-tenant-key>` (must match one of the keys in `.env`'s `VALID_TENANT_KEYS`)
+- The response includes the processed output, trace, and debug information.
 
 ## Streamlit Demo UI
 
 ### Setup Instructions
 
-1. Navigate to the `streamlit-ui` directory.
+1. Navigate to the `ui` directory.
 2. Install the required dependencies:
    ```
    pip install -r requirements.txt
@@ -53,7 +61,10 @@ azure-webapps-project
 
 ### Usage
 
-- The Streamlit UI allows users to interact with the backend API and visualize the results.
+- Enter your text and a valid tenant key (from the backend `.env` file).
+- Click "Process" to send the text to the FastAPI backend for processing.
+- Optionally, enable "Show agent trace/debug info" to view detailed trace and debug information from the backend.
+- You can also use `demo.py` to test the orchestration graph directly without the backend.
 
 ## Conclusion
 
