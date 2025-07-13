@@ -1,10 +1,12 @@
 import streamlit as st
 import requests
 from ui_common import render_examples, render_input_area, render_output
+import os
 
 # Define the FastAPI backend URL
-BACKEND_URL = "https://genai-backend.azurewebsites.net/process"
+# BACKEND_URL = "https://genai-backend.azurewebsites.net/process"
 # BACKEND_URL = "http://localhost:8000/process"  # Uncomment for local testing
+BACKEND_URL = os.getenv("BACKEND_URL", "https://genai-backend.azurewebsites.net/process")
 
 # Streamlit application
 st.title("GenAI Multi-Agent Orchestration PoC")
