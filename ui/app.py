@@ -11,6 +11,15 @@ BACKEND_URL = os.getenv("BACKEND_URL", "https://genai-backend.azurewebsites.net/
 # Streamlit application
 st.title("GenAI Multi-Agent Orchestration PoC")
 
+# Overview instructions for users
+st.markdown(
+    """
+    **Overview:**  
+    Use one of the prebuilt examples (or enter your text) and a valid tenant key below, then click "Process" to send your request to the backend and view the results, including optional trace/debug information.  \n\n
+    The backend uses LangGraph orchestration to coordinate multiple agents (such as summarization and translation) to process your input through a configurable workflow.
+    """
+)
+
 render_examples()
 input_text = render_input_area()
 
